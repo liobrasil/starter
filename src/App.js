@@ -1,25 +1,22 @@
-import logo from './logo.svg';
-import './App.css';
+import "./flow/config.js";
+import * as fcl from "@onflow/fcl";
+import { useEffect, useState } from "react";
+import { ChakraProvider, Flex } from "@chakra-ui/react";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+import Home from "./components/Home";
 
-function App() {
+export default function App() {
+  const [user, setUser] = useState({ loggedIn: null });
+  useEffect(() => fcl.currentUser.subscribe(setUser), []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ChakraProvider>
+      <Flex direction="column" justify="space-between" h="100vh">
+        <Navbar user={user} />
+        <Home user={user} />
+        <Footer />
+      </Flex>
+    </ChakraProvider>
   );
 }
-
-export default App;
