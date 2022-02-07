@@ -7,10 +7,9 @@ export default function Summary({ accountInfos }) {
       <Text>Available Balance ($Flow): {accountInfos?.availableBalance}</Text>
       <Text>Storage Used (kB): {accountInfos?.storageUsed}</Text>
       <Text>Storage Capacity (MB): {accountInfos?.storageCapacity}</Text>
-      <Text>
-        Flow from storage from Smartcontract function ($FLOW):{" "}
-        {accountInfos?.flowFromStorageCapacity}
-      </Text>
+      ------------------------------------------
+      <Text>Storage2Flow ($FLOW): {accountInfos?.storage2Flow}</Text>
+      <Text>Flow2Storage (MB): {accountInfos?.flow2Storage}</Text>
     </Flex>
   );
 }
