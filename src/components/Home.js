@@ -1,11 +1,14 @@
 import * as fcl from "@onflow/fcl";
 import { useEffect, useState } from "react";
-import { Flex, Text } from "@chakra-ui/react";
-import Summary from "./Summary";
+import { Flex, VStack } from "@chakra-ui/react";
+import Balances from "./Balances";
+import Transfer from "./Transfer";
 import { ACCOUNT_INFO } from "../cadence/scripts/account-info.script.js";
 
 export default function Home({ user }) {
   const [accountInfos, setAccountInfos] = useState();
+  const [txStatus, setTxStatus] = useState("");
+
   useEffect(() => {
     if (user.loggedIn) {
       (async () =>
@@ -16,14 +19,23 @@ export default function Home({ user }) {
           })
         ))();
     }
-  }, [user]);
+  }, [user, txStatus]);
 
   return (
-    <Flex py="10" bg="gray.100" h="100%" align="center" direction="column">
-      <Text mb="10px">Showing Account Info:</Text>
-
-      {user.loggedIn && <Summary accountInfos={accountInfos} />}
-      <Text>{user.loggedIn}</Text>
+    <Flex
+      py="10"
+      px="10"
+      bg="gray.100"
+      h="100%"
+      align="start"
+      direction="column"
+    >
+      {user.loggedIn && (
+        <VStack spacing="24px" align="start">
+          <Balances accountInfos={accountInfos} />
+          <Transfer setTxStatus={setTxStatus} />
+        </VStack>
+      )}
     </Flex>
   );
 }

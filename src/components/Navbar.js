@@ -6,7 +6,7 @@ export default function Navbar({ user }) {
   return (
     <>
       <Flex bg="tomato" w="100%" p={4} color="white" justify="space-between">
-        <Text>Welcome to my quick Flow App</Text>
+        <Text>Tokens transfer App - FLOW, USDC, BLT, tUSDT and FUSD</Text>
         {user.loggedIn ? (
           <ConnectedState user={user} />
         ) : (

@@ -1,14 +1,25 @@
-export const ACCOUNT_INFO = `import FlowStorageFees from 0xServiceAccount
-    pub fun main(address: Address): {String: AnyStruct} {
+export const ACCOUNT_INFO = `import FungibleToken from 0xFungibleToken
+import FiatToken from 0xFiatToken
+import FUSD from 0xFUSD
+import FlowToken from 0xFlowToken
+import TeleportedTetherToken from 0xTeleportedTetherToken
+import BloctoToken from 0xBloctoToken
 
-        // Return Flow from Storage (byte)
-        fun returnFlowFromStorage(_ storage: UInt64): UFix64 {
-            let f = UFix64(storage % 100000000 as UInt64) * 0.00000001 as UFix64 + UFix64(storage / 100000000 as UInt64)
-            let storageMb = f * 100.0 as UFix64
-            let storage = FlowStorageFees.storageCapacityToFlow(storageMb)
-            return storage
-        }
+pub fun main(address: Address): {String : UFix64} {
+  let account = getAccount(address)
 
-    let account = getAccount(address)
-    return {"balance": account.balance, "availableBalance": account.availableBalance, "storageUsed": account.storageUsed, "storageCapacity": account.storageCapacity} 
+  let fusdBalanceRef = account.getCapability(/public/fusdBalance).borrow<&FUSD.Vault{FungibleToken.Balance}>()
+  let fiatBalanceRef = account.getCapability(FiatToken.VaultBalancePubPath).borrow<&FiatToken.Vault{FungibleToken.Balance}>()
+  let flowTokenBalanceRef = account.getCapability(/public/flowTokenBalance).borrow<&FlowToken.Vault{FungibleToken.Balance}>()
+  let tetherTokenBalanceRef = account.getCapability(TeleportedTetherToken.TokenPublicBalancePath).borrow<&TeleportedTetherToken.Vault{FungibleToken.Balance}>()
+  let bloctoTokenBalanceRef = account.getCapability(/public/bloctoTokenBalance).borrow<&BloctoToken.Vault{FungibleToken.Balance}>()
+
+  let fusdBalance = fusdBalanceRef == nil ? 0.0 : fusdBalanceRef!.balance
+  let fiatBalance = fiatBalanceRef == nil ? 0.0 : fiatBalanceRef!.balance
+  let flowBalance = flowTokenBalanceRef == nil ? 0.0 : flowTokenBalanceRef!.balance
+  let tetherBalance = tetherTokenBalanceRef == nil ? 0.0 : tetherTokenBalanceRef!.balance
+  let bloctoBalance = bloctoTokenBalanceRef == nil ? 0.0 : bloctoTokenBalanceRef!.balance
+  
+
+  return { "FUSD": fusdBalance, "USDC": fiatBalance, "FLOW": flowBalance, "tUSDT": tetherBalance, "BLT": bloctoBalance }
 }`;
